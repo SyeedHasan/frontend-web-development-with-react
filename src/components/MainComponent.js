@@ -5,8 +5,8 @@ import { LEADERS } from '../shared/leaders';
 import { PROMOTIONS } from '../shared/promotions';
 import Menu from './MenuComponent';
 import Header from './HeaderComponent';
-import Dish from './DishdetailComponent';
 import Footer from './FooterComponent';
+import DishDetail from './DishdetailComponent';
 import Contact from './ContactComponent';
 import Home from './HomeComponent';
 
@@ -44,12 +44,24 @@ class Main extends Component {
       );
     }
 
+    const DishWithId = ({match}) => {
+      //Three props are passed. match, location and history.
+      // Convert to base 10 integer
+      return (
+        <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0]} 
+          comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10))} 
+        />
+
+      );
+    }
+
     return (
       <div className="App">
         <Header />
         <Switch>
           <Route path="/home" component={HomePage} />
           <Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
+          <Route path="/menu/:dishId" component={DishWithId} />
           <Route exact path="/contactus" component={Contact} ></Route>
           <Redirect to="/home" />
         </Switch>
