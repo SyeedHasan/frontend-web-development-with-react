@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from 'reactstrap'; 
 
 const RenderCard = ({item}) => {
+    console.log(item);
     return (
         <Card>
             <CardImg src={item.image} alt={item.name} />
@@ -15,7 +16,7 @@ const RenderCard = ({item}) => {
     );
 }
 
-function Home(props) {
+const Home = (props) => {
 
     return (
         <div className="container">
@@ -23,12 +24,13 @@ function Home(props) {
                 <div className="col-12 col-md m-1">
                     <RenderCard item={props.dish} />
                 </div>
-                <div className="col-12 col-md m-1">
-                    <RenderCard item={props.promotion} />
+                 <div className="col-12 col-md m-1">
+                    <RenderCard item={props.promotions} />
                 </div>
+                
                 <div className="col-12 col-md m-1">
                     <RenderCard item={props.leader} />
-                </div>
+                </div> 
             </div>
         </div>
     );
