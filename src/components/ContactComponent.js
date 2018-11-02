@@ -149,7 +149,7 @@ class Contact extends Component {
                                         model=".email"
                                         show="touched" //Only after item is touched
                                         messages={{
-                                            required: 'Required ',
+                                            required: 'Required',
                                             validEmail: 'Enter a valid email address'
                                         }}
                                     />
