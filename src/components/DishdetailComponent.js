@@ -22,7 +22,8 @@ class CommentForm extends Component {
     }
 
     handleSubmit = (values) => {
-        alert(JSON.stringify(values));
+        console.log(values);
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
 
     render() {
@@ -49,15 +50,15 @@ class CommentForm extends Component {
 
                             <Row className="form-group">
                                 <Col>
-                                    <Label htmlFor="name"><strong>Your Name</strong></Label>
-                                    <Control.text model=".name" name="name" className="form-control"
+                                    <Label htmlFor="author"><strong>Your Name</strong></Label>
+                                    <Control.text model=".author" name="author" className="form-control"
                                     validators={{
                                         minLength: minLength(3),
                                         maxLength: maxLength(15)
                                     }} />
                                     <Errors 
                                         className="text-danger"
-                                        model=".name"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             minLength: 'Must be greater than 2 characters',
@@ -109,7 +110,7 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({ comments }) {
+function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
         let allComments = comments.map((comment) => {
             return (
@@ -119,10 +120,10 @@ function RenderComments({ comments }) {
                 </ul>
             );
         });
-        return allComments;
+        return (<><div>{allComments}</div><CommentForm dishId={dishId} addComment={addComment} /></>);
     }
     else {
-        return (<div></div>);
+        return (<div><CommentForm /></div>);
     }
 }
 
@@ -136,7 +137,7 @@ const DishDetail = (props) => {
 
     ) : (null);
 
-    let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} /></div>
+    let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} /></div>
         : <div></div>;
 
     return (
@@ -160,12 +161,10 @@ const DishDetail = (props) => {
                     </div>
                     {dishInfo}
                     {commentInfo}
-                    <CommentForm />
                 </div>
             </div>
         </div>
     );
 }
-
 
 export default DishDetail;
