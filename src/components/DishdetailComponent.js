@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Breadcrumb, Label, BreadcrumbItem, Button, Col, Row, Card, CardImg, CardText, CardBody, CardTitle, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, Errors, LocalForm } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => val && (val.length >= len);
@@ -37,14 +38,14 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Col md={6}>
                                     <Label htmlFor="rating"><strong>Rating</strong></Label>
-                                        <Control.select model=".rating" name="rating"
-                                            className="form-control">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </Control.select>
+                                    <Control.select model=".rating" name="rating"
+                                        className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
                                 </Col>
                             </Row>
 
@@ -52,11 +53,11 @@ class CommentForm extends Component {
                                 <Col>
                                     <Label htmlFor="author"><strong>Your Name</strong></Label>
                                     <Control.text model=".author" name="author" className="form-control"
-                                    validators={{
-                                        minLength: minLength(3),
-                                        maxLength: maxLength(15)
-                                    }} />
-                                    <Errors 
+                                        validators={{
+                                            minLength: minLength(3),
+                                            maxLength: maxLength(15)
+                                        }} />
+                                    <Errors
                                         className="text-danger"
                                         model=".author"
                                         show="touched"
@@ -64,7 +65,7 @@ class CommentForm extends Component {
                                             minLength: 'Must be greater than 2 characters',
                                             maxLength: 'Must be 15 characters or less'
                                         }}
-                                     />
+                                    />
                                 </Col>
                             </Row>
 
@@ -78,7 +79,7 @@ class CommentForm extends Component {
                             <Row className="form-group">
                                 <Col md={{ size: 12 }}>
                                     <Button type="submit" color="primary">
-                                        Submit 
+                                        Submit
                                     </Button>
                                 </Col>
                             </Row>
@@ -129,42 +130,63 @@ function RenderComments({ comments, addComment, dishId }) {
 
 const DishDetail = (props) => {
 
-    let dishInfo = props.dish ? (
-        <Card>
-            <CardImg width="100%" src={props.dish.image} alt={props.dish.name} />
-            <RenderDish dish={props.dish} />
-        </Card>
-
-    ) : (null);
-
-    let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} /></div>
-        : <div></div>;
-
-    return (
-        <div className="row">
-            <div className="col-12 col-md-5 m-1">
-                <div className="container">
-                    <div className="row">
-                        <Breadcrumb>
-                            <BreadcrumbItem>
-                                <Link to='/home'>Home</Link>
-                            </BreadcrumbItem>
-                            <BreadcrumbItem>
-                                <Link to='/menu'>Menu</Link>
-                            </BreadcrumbItem>
-                            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-                        </Breadcrumb>
-                        <div className="col-12">
-                            <h3>{props.dish.name}</h3>
-                            <hr />
-                        </div>
-                    </div>
-                    {dishInfo}
-                    {commentInfo}
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
                 </div>
             </div>
-        </div>
-    );
+        );
+    }
+    else if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else if (props.dish != null) {
+
+        let dishInfo = props.dish ? (
+            <Card>
+                <CardImg width="100%" src={props.dish.image} alt={props.dish.name} />
+                <RenderDish dish={props.dish} />
+            </Card>
+
+        ) : (null);
+
+        let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} /></div>
+            : <div></div>;
+
+        return (
+            <div className="row">
+                <div className="col-12 col-md-5 m-1">
+                    <div className="container">
+                        <div className="row">
+                            <Breadcrumb>
+                                <BreadcrumbItem>
+                                    <Link to='/home'>Home</Link>
+                                </BreadcrumbItem>
+                                <BreadcrumbItem>
+                                    <Link to='/menu'>Menu</Link>
+                                </BreadcrumbItem>
+                                <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+                            </Breadcrumb>
+                            <div className="col-12">
+                                <h3>{props.dish.name}</h3>
+                                <hr />
+                            </div>
+                        </div>
+                        {dishInfo}
+                        {commentInfo}
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default DishDetail;
