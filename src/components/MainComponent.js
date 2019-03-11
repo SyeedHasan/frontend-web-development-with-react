@@ -9,6 +9,7 @@ import Home from './HomeComponent';
 import { addComment, fetchDishes } from '../redux/ActionCreators';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
 
 const mapStateToProps = state => {
     return {
@@ -22,7 +23,9 @@ const mapStateToProps = state => {
 //For these to be available as props
 const mapDispatchToProps = (dispatch) => ({
   addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-  fetchDishes: () => { dispatch(fetchDishes()) }
+  fetchDishes: () => { dispatch(fetchDishes()) },
+  // Resets the form from actions that are already in the library
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
 });
 
 class Main extends Component {
@@ -78,7 +81,7 @@ class Main extends Component {
           <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
           <Route path="/menu/:dishId" component={DishWithId} />
           <Route exact path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
-          <Route exact path="/contactus" component={Contact} ></Route>
+    <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />}></Route>
           <Redirect to="/home" />
         </Switch>
         {/* <Menu dishes={this.props.dishes} onClick={(dishId) => this.onDishSelect(dishId)} /> */}
