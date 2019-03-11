@@ -6,8 +6,10 @@ import DishDetail from './DishdetailComponent';
 import About from './AboutComponent';
 import Contact from './ContactComponent';
 import Home from './HomeComponent';
+import { addComment, fetchDishes } from '../redux/ActionCreators';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { actions } from 'react-redux-form';
 import { addComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
@@ -19,8 +21,12 @@ const mapStateToProps = state => {
 	}
 }
 
+//For these to be available as props
 const mapDispatchToProps = (dispatch) => ({
-	addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => { dispatch(fetchDishes()) },
+  // Resets the form from actions that are already in the library
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
 });
 
 class Main extends Component {
@@ -35,15 +41,21 @@ class Main extends Component {
 		return a[0];
 	}
 
-	render() {
+  componentDidMount() { 
+      this.props.fetchDishes();
+  }
 
-		const HomePage = () => {
-			return (
-				<Home
-					dish={this.props.dishes.filter((dish) => dish.featured)[0]}
-					promotions={this.props.promotions.filter((promo) => promo.featured)[0]}
-					leader={this.props.leaders.filter((leader) => leader.featured)[0]}
-				/>
+  render() {
+
+    const HomePage = () => {
+      return (
+        <Home
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          dishesLoading={this.props.dishes.isLoading}
+          dishesErrMess={this.props.dishes.errMess}
+          promotions={this.props.promotions.filter((promo) => promo.featured)[0]}
+          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+        />
 
 			);
 		}
@@ -60,24 +72,24 @@ class Main extends Component {
 			);
 		}
 
-		return (
-			<div className="App">
-				<Header />
-				<Switch>
-					<Route path="/home" component={HomePage} />
-					<Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
-					<Route path="/menu/:dishId" component={DishWithId} />
-					<Route exact path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
-					<Route exact path="/contactus" component={Contact} ></Route>
-					<Redirect to="/home" />
-				</Switch>
-				{/* <Menu dishes={this.props.dishes} onClick={(dishId) => this.onDishSelect(dishId)} /> */}
-				{/* Selecting specific dish by fitlering the main array and get one result b/c id's are unique */}
-				{/* <Dish dish={this.sendDish()} /> */}
-				<Footer />
-			</div>
-		);
-	}
+    return (
+      <div className="App">
+        <Header />
+        <Switch>
+          <Route path="/home" component={HomePage} />
+          <Route exact path="/menu" component={() => <Menu dishes={this.props.dishes} />} />
+          <Route path="/menu/:dishId" component={DishWithId} />
+          <Route exact path="/aboutus" component={() => <About leaders={this.props.leaders} />} />
+    <Route exact path="/contactus" component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />}></Route>
+          <Redirect to="/home" />
+        </Switch>
+        {/* <Menu dishes={this.props.dishes} onClick={(dishId) => this.onDishSelect(dishId)} /> */}
+        {/* Selecting specific dish by fitlering the main array and get one result b/c id's are unique */}
+        {/* <Dish dish={this.sendDish()} /> */}
+        <Footer />
+      </div>
+    );
+  }
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));

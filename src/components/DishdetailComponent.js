@@ -134,7 +134,7 @@ function RenderDish({ dish }) {
 
 function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
-        const allComments = comments.map((comment) => {
+        let allComments = comments.map((comment) => {
             return (
                 <ul key={comment.id} className="list-unstyled">
                     <li>{comment.comment}</li>
@@ -151,6 +151,25 @@ function RenderComments({ comments, addComment, dishId }) {
 }
 
 const DishDetail = (props) => {
+
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
 
     let dishInfo = props.dish ? (
         <Card>
@@ -181,14 +200,14 @@ const DishDetail = (props) => {
                             <h3>{props.dish.name}</h3>
                             <hr />
                         </div>
+                        {dishInfo}
+                        {commentInfo}
                     </div>
-                    {dishInfo}
-                    {commentInfo}
                 </div>
             </div>
         </div>
-    );
+        );
+    }
 }
-
 
 export default DishDetail;
