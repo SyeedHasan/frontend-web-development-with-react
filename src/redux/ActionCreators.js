@@ -37,18 +37,47 @@ export const fetchDishes = () => (dispatch) => {
     // }, 2000);
 
     return fetch(baseUrl + 'dishes')
+        .then(response => {
+            if(response.ok) {
+                return response;
+            }
+            else {
+                let error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            let errMess = new Error(error.message);
+            throw errMess;
+        })
+
         .then(response => response.json())
         .then(dishes => dispatch(addDishes(dishes)))
-        .catch(err => console.log("FetchDish: " + err);)
+        .catch(error => dispatch(dishesFailed(error.message)));
 };
 
 
 export const fetchComments = () => (dispatch) => {
 
     return fetch(baseUrl + 'comments')
+        .then(response => {
+            if(response.ok) {
+                return response;
+            }
+            else {
+                let error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            let errMess = new Error(error.message);
+            throw errMess;
+        })
         .then(response => response.json())
         .then(comments => dispatch(addComments(comments)))
-        .catch(err => console.log("FetchDish: " + err))
+        .catch(error => dispatch(commentsFailed(error.message)));
 };
 
 export const commentsFailed = (errmess) => ({
@@ -64,16 +93,26 @@ export const addComments = (comments) => ({
 export const fetchPromos = () => (dispatch) => {
     dispatch(promosLoading(true));
 
-    // Replaced by server comm.
-    // setTimeout(() => {
-    //     dispatch(addDishes(DISHES));
-    // }, 2000);
-
     return fetch(baseUrl + 'promotions')
+        .then(response => {
+            if(response.ok) {
+                return response;
+            }
+            else {
+                let error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+        error => {
+            let errMess = new Error(error.message);
+            throw errMess;
+        })
         .then(response => response.json())
         .then(promos => dispatch(addPromos(promos)))
-        .catch(err => console.log("FetchDish: " + err);)
-};
+        .catch(error => dispatch(promosFailed(error.message)));
+
+    };
 
 export const promosLoading = () => ({
     type: ActionTypes.PROMOS_LOADING,
