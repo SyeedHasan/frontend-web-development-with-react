@@ -1,6 +1,6 @@
 
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { createForms } from '.react-redux-form';
+import { createForms } from 'react-redux-form';
 // Creates a reducer
 import { Dishes } from './dishes';
 import { Comments } from './comments';

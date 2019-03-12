@@ -10,7 +10,6 @@ import { addComment, fetchDishes } from '../redux/ActionCreators';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
-import { addComment } from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
 	return {
@@ -64,13 +63,16 @@ class Main extends Component {
 			//Three props are passed. match, location and history.
 			// Convert to base 10 integer
 			return (
-				<DishDetail dish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0]} 
+				<DishDetail dish={this.props.dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0]} 
+				  isLoading={this.props.dishes.isLoading}
+					errMess={this.props.dishes.errMess}
 					comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10))} 
 					addComment={this.props.addComment}
 				/>
 
 			);
 		}
+
 
     return (
       <div className="App">

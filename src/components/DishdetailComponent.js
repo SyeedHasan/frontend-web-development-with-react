@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Row, Col, Label, Button, Card, CardImg, CardText, CardBody, CardTitle, Modal, ModalBody, ModalHeader, ModalFooter } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { LocalForm, Errors, Control } from 'react-redux-form';
+import { Loading } from './LoadingComponent';
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => !(val) || (val.length >= len);
@@ -151,26 +152,24 @@ function RenderComments({ comments, addComment, dishId }) {
 }
 
 const DishDetail = (props) => {
-
-    if (props.isLoading) {
-        return (
-            <div className="container">
-                <div className="row">
-                    <Loading />
-                </div>
+    if(props.isLoading) {
+        return (<div className="container">
+            <div className="row ">
+                <Loading />
             </div>
-        );
+            </div>
+            )
     }
-    else if (props.errMess) {
-        return (
+    else if(props.errMess) {
+        return(
             <div className="container">
-                <div className="row">
+                <div className="row">            
                     <h4>{props.errMess}</h4>
                 </div>
             </div>
         );
     }
-
+    // this clause might be problematic!!
     let dishInfo = props.dish ? (
         <Card>
             <CardImg width="100%" src={props.dish.image} alt={props.dish.name} />
@@ -200,14 +199,14 @@ const DishDetail = (props) => {
                             <h3>{props.dish.name}</h3>
                             <hr />
                         </div>
-                        {dishInfo}
-                        {commentInfo}
                     </div>
+                    {dishInfo}
+                    {commentInfo}
                 </div>
             </div>
         </div>
-        );
-    }
+    );
 }
+
 
 export default DishDetail;
