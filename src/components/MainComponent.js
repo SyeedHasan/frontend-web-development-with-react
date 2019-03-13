@@ -6,7 +6,7 @@ import DishDetail from './DishdetailComponent';
 import About from './AboutComponent';
 import Contact from './ContactComponent';
 import Home from './HomeComponent';
-import * from '../redux/ActionCreators';
+import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { actions } from 'react-redux-form';
@@ -22,7 +22,7 @@ const mapStateToProps = state => {
 
 //For these to be available as props
 const mapDispatchToProps = (dispatch) => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
   fetchDishes: () => { dispatch(fetchDishes()) },
   // Resets the form from actions that are already in the library
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
@@ -74,7 +74,7 @@ class Main extends Component {
 				  isLoading={this.props.dishes.isLoading}
 					errMess={this.props.dishes.errMess}
 					comments={this.props.comments.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10))} 
-					addComment={this.props.addComment}
+					postComment={this.props.postComment}
 					commentsErrMess={this.props.comments.errMess}
         />
 

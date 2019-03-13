@@ -4,15 +4,49 @@ import { DISHES } from '../shared/dishes';
 import { baseUrl } from '../shared/baseUrl';
 
 
-export const addComment = (dishId, rating, author, comment) => ({
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
-    payload: {
+    payload: comment
+});
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+   
+    const newComment = {
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
     }
-});
+
+    newComment.date = new Date().toISOString();
+    return fetch(baseUrl + 'comments', {
+        method: 'POST',
+        body: JSON.stringify(newComment),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if(response.ok) {
+            return response;
+        }
+        else {
+            let error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    },
+    error => {
+        let errMess = new Error(error.message);
+        throw errMess;
+    })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .catch(error => {console.log('Post comments ', error.message)
+        alert("Your comment couldn't be posted\n Error: " + error.message)
+        })
+};
 
 export const dishesLoading = () => ({
     type: ActionTypes.DISHES_LOADING,
@@ -56,7 +90,6 @@ export const fetchDishes = () => (dispatch) => {
         .then(dishes => dispatch(addDishes(dishes)))
         .catch(error => dispatch(dishesFailed(error.message)));
 };
-
 
 export const fetchComments = () => (dispatch) => {
 

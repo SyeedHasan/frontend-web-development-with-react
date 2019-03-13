@@ -5,7 +5,6 @@ import { LocalForm, Errors, Control } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
 
-
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => !(val) || (val.length >= len);
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -28,7 +27,7 @@ class CommentForm extends Component {
 
     handleSubmitChange = (values) => {
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment)
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment)
     }
 
     render() {
@@ -135,7 +134,7 @@ function RenderDish({ dish }) {
     }
 }
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
     if (comments != null) {
         let allComments = comments.map((comment) => {
             return (
@@ -145,11 +144,11 @@ function RenderComments({ comments, addComment, dishId }) {
                 </ul>
             );
         });
-        allComments.push(<CommentForm dishId={dishId} addComment={addComment} />);
+        allComments.push(<CommentForm dishId={dishId} postComment={postComment} />);
         return allComments;
     }
     else {
-        return (<div><CommentForm dishId={dishId} addComment={addComment} /></div>);
+        return (<div><CommentForm dishId={dishId} postComment={postComment} /></div>);
     }
 }
 
@@ -180,7 +179,7 @@ const DishDetail = (props) => {
 
     ) : (null);
 
-    let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} addComment={props.addComment} dishId={props.dish.id} /></div>
+    let commentInfo = props.dish ? <div><h4>Comments</h4><RenderComments comments={props.comments} postComment={props.postComment} dishId={props.dish.id} /></div>
         : <div></div>;
 
     return (

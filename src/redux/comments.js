@@ -8,8 +8,8 @@ export const Comments = (state = {
     switch(action.type) {
         case ActionTypes.ADD_COMMENT:
             var comment = action.payload;
-            comment.id = state.comments.length;
-            comment.date = new Date().toISOString();
+            // comment.id = state.comments.length; Auto by SV
+            // comment.date = new Date().toISOString(); Done on client-side
             return {...state, comments: state.comments.concat(comment)};
         
         case ActionTypes.ADD_COMMENTS:
