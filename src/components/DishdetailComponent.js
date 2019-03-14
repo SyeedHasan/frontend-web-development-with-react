@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { LocalForm, Errors, Control } from 'react-redux-form';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const minLength = (len) => (val) => !(val) || (val.length >= len);
@@ -139,8 +140,12 @@ function RenderComments({ comments, postComment, dishId }) {
         let allComments = comments.map((comment) => {
             return (
                 <ul key={comment.id} className="list-unstyled">
-                    <li>{comment.comment}</li>
-                    <li> -- {comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))} </li>
+                    <Stagger in>
+                        <Fade in>
+                            <li>{comment.comment}</li>
+                            <li> -- {comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))} </li>
+                            </Fade>                    
+                    </Stagger>     
                 </ul>
             );
         });
@@ -172,10 +177,15 @@ const DishDetail = (props) => {
     }
     // this clause might be problematic!!
     let dishInfo = props.dish ? (
-        <Card>
-            <CardImg width="100%" src={baseUrl + props.dish.image} alt={props.dish.name} />
-            <RenderDish dish={props.dish} />
-        </Card>
+        <FadeTransform in
+        transformProps={{
+            existTransform: 'scale(0.5) translateY(-50%)'
+        }}>  
+            <Card>
+                <CardImg width="100%" src={baseUrl + props.dish.image} alt={props.dish.name} />
+                <RenderDish dish={props.dish} />
+            </Card>
+        </FadeTransform>
 
     ) : (null);
 
