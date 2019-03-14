@@ -47,6 +47,45 @@ export const postComment = (dishId, rating, author, comment) => (dispatch) => {
         })
 };
 
+export const postFeedback = ({ feedback }) => (dispatch) => {
+       
+    const newComment = {
+        dishId: dishId,
+        rating: rating,
+        author: author,
+        comment: comment
+    }
+
+    newComment.date = new Date().toISOString();
+    return fetch(baseUrl + 'comments', {
+        method: 'POST',
+        body: JSON.stringify(newComment),
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if(response.ok) {
+            return response;
+        }
+        else {
+            let error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    },
+    error => {
+        let errMess = new Error(error.message);
+        throw errMess;
+    })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response)))
+    .catch(error => {console.log('Post comments ', error.message)
+        alert("Your comment couldn't be posted\n Error: " + error.message)
+        })
+};
+
 export const dishesLoading = () => ({
     type: ActionTypes.DISHES_LOADING,
 });
@@ -113,6 +152,8 @@ export const fetchComments = () => (dispatch) => {
 };
 
 export const fetchLeaders = () => (dispatch) => {
+    dispatch(leadersLoading(true));
+
     return fetch(baseUrl + 'leaders')
         .then(response => {
             if(response.ok) {
