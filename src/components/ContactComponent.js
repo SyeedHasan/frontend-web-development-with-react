@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Label, Row, Col } from 'reactstrap';
-import { Control, Form, Errors, actions } from 'react-redux-form';
+import { Control, Form, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
 const required = (val) => val && val.length;
@@ -16,7 +16,8 @@ class Contact extends Component {
         this.handleSubmitChange = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(event) {
+    handleSubmit(e) {
+        this.props.postFeedback(e.firstname, e.lastname, e.telnum, e.email, e.agree, e.contactType, e.message);
         this.props.resetFeedbackForm();
     }
 
@@ -56,7 +57,7 @@ class Contact extends Component {
                     <div className="col-12 col-sm-11 offset-sm-1">
                         <div className="btn-group" role="group">
                             <a role="button" className="btn btn-primary" href="tel:+85212345678"><i className="fa fa-phone"></i> Call</a>
-                            <a role="button" className="btn btn-info"><i className="fa fa-skype"></i> Skype</a>
+                            <a role="button" className="btn btn-info" href="https://wwww.skype.com"><i className="fa fa-skype"></i> Skype</a>
                             <a role="button" className="btn btn-success" href="mailto:confusion@food.net"><i className="fa fa-envelope-o"></i> Email</a>
                         </div>
                     </div>
